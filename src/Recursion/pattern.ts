@@ -16,8 +16,15 @@ const bizz = (num: number) => {
   console.log(num % 2);
 };
 
+// const toBinary = (val: number): number | string => {
+//   if (val <= 0) return '';
+//   return toBinary(Math.floor(val / 2)) + (val % 2).toString();
+// };
+
 const toBinary = (val: number, last: string = ''): number | string => {
   if (val <= 0) return last;
-  return toBinary(Math.floor(val / 2), (val % 2).toString() + last);
+  return toBinary(Math.floor(val / 2), `${val % 2}` + last);
 };
-console.log(toBinary(12));
+console.time('Time');
+console.log(toBinary(100000089998888999043802480928394828999900000000009990222222222222));
+console.timeEnd('Time');
