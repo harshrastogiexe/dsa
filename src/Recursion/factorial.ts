@@ -17,5 +17,5 @@ const factorial = {
 };
 
 console.time('Time');
-console.log({ result: factorial.recursive(5) });
+console.log({ result: factorial.recursive(7) });
 console.timeEnd('Time');
