@@ -1,67 +1,45 @@
-class Item {
-  public data: number;
-  next: null | Item = null;
-  constructor(val: number) {
-    this.data = val;
-  }
-}
+type HashFunction<key> = (...data: any) => key;
+class Hashtable<K, V> {
+  hashFunction: HashFunction<K>;
+  private table = new Map<K, V[]>();
 
-class List {
-  public head: null | Item = null;
-  constructor() {
-    this.head;
+  constructor(func?: HashFunction<K>) {
+    this.hashFunction = func ? func : func;
   }
-  insert(data: number) {
-    const item = new Item(data);
-    if (!this.head) return (this.head = item);
 
-    let temp: Item | null = this.head;
-    while (temp.next !== null) temp = temp.next;
-    temp.next = item;
+  contains(data: V) {
+    const key = this.hashFunction(data);
+    const value = this.table.get(key);
+    if (!value) return false;
+
+    return value.includes(data);
   }
-}
 
-const hashFunction = (val: number) => val % 7;
-type HashFunction = (val: any) => number;
-class HashTable {
-  private map = new Map<number, List>();
-  hashFuction: HashFunction;
-  constructor(func: HashFunction) {
-    this.hashFuction = func;
-  }
-  save(value: number) {
-    const key = this.hashFuction(value);
+  save(data: V) {
+    const key = this.hashFunction(data);
+    const value = this.table.get(key);
 
-    if (!this.map.has(key)) {
-      const list = new List();
-      list.insert(value);
-      this.map.set(key, list);
-      return key;
-    }
-    this.map.get(key)?.insert(value);
+    if (!value) this.table.set(key, [data]);
+    else value.push(data);
+
     return key;
   }
 
-  get(key: number) {
-    const list = this.map.get(key);
-    return list;
+  remove(data: V) {
+    const key = this.hashFunction(data);
+    const value = this.table.get(key);
+
+    if (!value) return false;
+    const pos = value.indexOf(data);
+    const result = !!(pos !== -1 && value.splice(pos, 1));
+    return result;
   }
 }
 
-const table = new HashTable((val) => val % 7);
-table.save(50);
-table.save(21);
-table.save(58);
-table.save(17);
-table.save(15);
-table.save(49);
-table.save(56);
-table.save(22);
-table.save(23);
-table.save(25);
-
-console.log(table.get(0));
-console.log(table.get(1));
-console.log(table.get(2));
-console.log(table.get(3));
-console.log(table.get(4));
+const hashCollection = new Hashtable<number, number>();
+hashCollection.save(91);
+hashCollection.save(20);
+hashCollection.save(75);
+hashCollection.save(74);
+hashCollection.save(56);
+console.log(hashCollection);
