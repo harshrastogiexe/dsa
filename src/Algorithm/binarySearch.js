@@ -14,14 +14,7 @@ const interative = (array, key, start = 0, end = array.length - 1) => {
 
   return -1;
 };
-/**
- *
- * @param {Number[]} array Array
- * @param {Number} key
- * @param {Number} start
- * @param {Number} end
- * @returns {Number}
- */
+
 const recursive = (array, key, start = 0, end = array.length - 1) => {
   if (!key) throw new Error('Key Not Provided');
   if (start > end) return -1;
@@ -33,3 +26,5 @@ const recursive = (array, key, start = 0, end = array.length - 1) => {
   else if (key < middleValue) return recursive(array, key, start, middle - 1);
   else return recursive(array, key, middle + 1, end);
 };
+
+export const search = { recursive, interative };
