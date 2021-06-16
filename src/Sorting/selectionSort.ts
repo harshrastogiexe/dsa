@@ -8,7 +8,3 @@ const selectionSort = (arr: any[]) => {
   }
   return arr;
 };
-
-const result = selectionSort('9120757456'.split(''));
-
-console.log({ result });
