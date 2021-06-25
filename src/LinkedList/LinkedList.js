@@ -163,15 +163,52 @@ class List {
     }
     this.head = prev;
   }
+
+  reverseRecursive() {
+    if (!this.head || !this.head.next) return;
+
+    let prev = this.head;
+    let current = this.head.next;
+
+    if (!current.next) {
+      current.next = prev;
+      this.head = current;
+      prev.next = null;
+      return;
+    }
+    const recursive = (current) => {
+      if (!current) return;
+      let next = current.next;
+      current.next = prev;
+    };
+  }
+
+  removeDuplicates() {
+    let uniqueNode = this.head;
+    let current = this.head;
+    while (current) {
+      if (uniqueNode.data !== current.data) {
+        uniqueNode.next = current;
+        uniqueNode = current;
+      }
+      current = current.next;
+    }
+  }
 }
 
 const list = new List();
 
 list.insertSorted(10);
+list.insertSorted(10);
+list.insertSorted(10);
 list.insertSorted(20);
 list.insertSorted(30);
+list.insertSorted(30);
+list.insertSorted(30);
 // list.insertSorted(40);
-// list.insertSorted(50);
+list.insertSorted(50);
+
+list.removeDuplicates();
 
 // console.log({ middle: list.getMiddle() });
 list.reverse();
