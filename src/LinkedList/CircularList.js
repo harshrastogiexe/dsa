@@ -67,13 +67,39 @@ class CircularList {
     }
     prev.next = this.head;
   }
+
+  get head() {
+    return this.head;
+  }
 }
 
-const list = new CircularList();
-list.push('(');
-list.push(')');
+function nextGreater(array = []) {
+  const list = new CircularList();
+  array.forEach((val) => list.push(val));
 
-list.pop();
-list.pop();
+  if (!list.head) return [];
+  if (!list.head.next) return [-1];
 
-list.traverse(console.log);
+  const output = [];
+  let current = list.head;
+
+  list.traverse((val) => {
+    let nextNode = current.next;
+    while (nextNode !== current)
+      if (nextNode.data > val) {
+        output.push(nextNode.data);
+        current = current.next;
+        return;
+      } else nextNode = nextNode.next;
+
+    current = current.next;
+    output.push(-1);
+  });
+
+  return output;
+}
+console.time('Time');
+const result = nextGreater([1, 5, 12, 10, 0]);
+console.timeEnd('Time');
+
+console.log(result);
