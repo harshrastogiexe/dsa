@@ -24,6 +24,7 @@ class Stack<T> {
   }
 
   pop() {
+    if (this._top === -1) return;
     const data = this.stack.pop();
     this.decreaseTop();
     return data;
@@ -65,18 +66,36 @@ function balacingSymbols(str: string) {
   return stack.isEmpty() ? true : false;
 }
 
+function precendence(val: string): number {
+  switch (val) {
+    case '^':
+      return 3;
+    case '*':
+    case '/':
+      return 2;
+    case '+':
+    case '-':
+      return 1;
+    default:
+      return 0;
+  }
+}
+
 function infixToPostfix(str: string) {
-  const stack = new Stack();
+  const stack = new Stack<string>();
   let expression = '';
 
   for (let character of str) {
     if (/[A-Z]/.test(character)) expression += character;
+    else if (character === '(') stack.push(character);
     else if (character === ')') {
-      while (!stack.isEmpty() && stack.top !== '(') {
-        expression += stack.pop();
-      }
+      while (!stack.isEmpty() && stack.top !== '(') expression += stack.pop();
       stack.pop();
-    } else stack.push(character);
+    } else {
+      while (!stack.isEmpty() && precendence(stack.top!) >= precendence(character))
+        expression += stack.pop();
+      stack.push(character);
+    }
   }
 
   while (!stack.isEmpty()) expression += stack.pop();
@@ -84,5 +103,20 @@ function infixToPostfix(str: string) {
   return expression;
 }
 
-const result = infixToPostfix('A*B-(C+D)+E');
-console.log({ result });
+function evaluatePostfix(str: string, data: { [key: string]: number }) {
+  const expression = infixToPostfix(str);
+  const stack = new Stack<number>();
+  for (let character of expression) {
+    if (/[A-Z]/.test(character)) stack.push(data[character] || 0);
+    else {
+      const operand2 = stack.pop();
+      const operand1 = stack.pop();
+      const result = +eval(`${operand1}${character}${operand2}`);
+      stack.push(result);
+    }
+  }
+  return stack.top;
+}
+
+const result = evaluatePostfix('A*(B+C)', { A: 10, B: 40, C: 2 });
+console.log(result);
