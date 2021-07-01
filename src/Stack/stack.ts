@@ -85,7 +85,7 @@ function infixToPostfix(str: string) {
   const stack = new Stack<string>();
   let expression = '';
 
-  for (let character of str) {
+  for (let character of str)
     if (/[A-Z]/.test(character)) expression += character;
     else if (character === '(') stack.push(character);
     else if (character === ')') {
@@ -96,12 +96,27 @@ function infixToPostfix(str: string) {
         expression += stack.pop();
       stack.push(character);
     }
-  }
 
   while (!stack.isEmpty()) expression += stack.pop();
 
   return expression;
 }
+
+function infixToPrefix(str: string) {
+  const reversingStack = new Stack<string>();
+  for (let character of str) reversingStack.push(character);
+  let reveseStr = '';
+  while (!reversingStack.isEmpty()) {
+    let topData = reversingStack.pop();
+    if (topData === '(') topData = ')';
+    else if (topData === ')') topData = '(';
+    reveseStr += topData;
+  }
+  const expression = infixToPostfix(reveseStr);
+  return expression.split('').reverse().join('');
+}
+
+console.log(infixToPrefix('A*B+C/D'));
 
 function evaluatePostfix(str: string, data: { [key: string]: number }) {
   const expression = infixToPostfix(str);
@@ -117,6 +132,3 @@ function evaluatePostfix(str: string, data: { [key: string]: number }) {
   }
   return stack.top;
 }
-
-const result = evaluatePostfix('A*(B+C)', { A: 10, B: 40, C: 2 });
-console.log(result);
