@@ -66,6 +66,14 @@ class Tree<T> {
     }
   }
 
+  get height() {
+    const calcHeight = (current = this.root): number => {
+      if (!current) return 0;
+      return 1 + Math.max(calcHeight(current.left), calcHeight(current.right));
+    };
+    return calcHeight();
+  }
+
   static buildTree(preOrder: string, inOrder: string) {
     const tree = new Tree<string>();
     let preIndex = 0;
@@ -99,14 +107,28 @@ function maxNode(root: TreeNode<number>): number | undefined {
 
   return Math.max(root.data, leftTreeMax, rightTreeMax);
 }
+
+function nodeAtDistance(from: TreeNode<number>, root: TreeNode<number>, k: number) {
+  const nodes: number[] = [];
+  function nodeBelow(current = from, distance = k) {
+    if (!current || k < 0) return;
+    if (distance === 0) {
+      nodes.push(current.data);
+      return;
+    }
+    current.left && nodeBelow(current.left, distance - 1);
+    current.right && nodeBelow(current.right, distance - 1);
+  }
+  if (!root) return null;
+  if (root === from) {
+    nodeBelow();
+    return 0;
+  }
+  nodeBelow();
+  console.log(nodes);
+}
+
 const tre = new Tree<number>();
 
-tre.add(2);
-tre.add(1);
-tre.add(3);
-tre.add(4);
-tre.add(0);
-tre.add(2);
-tre.add(3);
-// tre.traverse(console.log);
-Tree.buildTree('12435', '42153').traverse(console.log);
+[20, 8, 22, 4, 12, 10, 14].forEach((val) => tre.add(val));
+nodeAtDistance(tre.root!.left!, tre.root!, 2);
