@@ -41,6 +41,14 @@ class Tree<T> {
     _traverse(this.root);
   }
 
+  get size() {
+    const calculate = (current = this.root): number => {
+      if (!current) return 0;
+      return calculate(current.left) + 1 + calculate(current.right);
+    };
+    return calculate();
+  }
+
   add(data: T) {
     const node = new TreeNode(data);
     if (!this.root) {
@@ -119,6 +127,7 @@ function nodeAtDistance(from: TreeNode<number>, root: TreeNode<number>, k: numbe
     current.left && nodeBelow(current.left, distance - 1);
     current.right && nodeBelow(current.right, distance - 1);
   }
+
   if (!root) return null;
   if (root === from) {
     nodeBelow();
@@ -131,4 +140,6 @@ function nodeAtDistance(from: TreeNode<number>, root: TreeNode<number>, k: numbe
 const tre = new Tree<number>();
 
 [20, 8, 22, 4, 12, 10, 14].forEach((val) => tre.add(val));
-nodeAtDistance(tre.root!.left!, tre.root!, 2);
+// nodeAtDistance(tre.root!.left!, tre.root!, 2);
+
+console.log(tre.size);
