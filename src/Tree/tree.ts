@@ -82,6 +82,19 @@ class Tree<T> {
     return calcHeight();
   }
 
+  // bfs search
+  levelTraversal(callback: (data: T) => void) {
+    if (!this.root) return;
+    const queue: TreeNode<T>[] = [];
+    queue.push(this.root);
+    while (!!queue.length) {
+      const front = queue.shift()!;
+      callback(front.data);
+      front?.left && queue.push(front.left);
+      front?.right && queue.push(front.right);
+    }
+  }
+
   static buildTree(preOrder: string, inOrder: string) {
     const tree = new Tree<string>();
     let preIndex = 0;
@@ -116,30 +129,33 @@ function maxNode(root: TreeNode<number>): number | undefined {
   return Math.max(root.data, leftTreeMax, rightTreeMax);
 }
 
-function nodeAtDistance(from: TreeNode<number>, root: TreeNode<number>, k: number) {
-  const nodes: number[] = [];
-  function nodeBelow(current = from, distance = k) {
-    if (!current || k < 0) return;
-    if (distance === 0) {
-      nodes.push(current.data);
-      return;
-    }
-    current.left && nodeBelow(current.left, distance - 1);
-    current.right && nodeBelow(current.right, distance - 1);
-  }
+// TODO
+// function nodeAtDistance(from: TreeNode<number>, root: TreeNode<number>, k: number) {
+//   const nodes: number[] = [];
+//   function nodeBelow(current = from, distance = k) {
+//     if (!current || k < 0) return;
+//     if (distance === 0) {
+//       nodes.push(current.data);
+//       return;
+//     }
+//     current.left && nodeBelow(current.left, distance - 1);
+//     current.right && nodeBelow(current.right, distance - 1);
+//   }
 
-  if (!root) return null;
-  if (root === from) {
-    nodeBelow();
-    return 0;
-  }
-  nodeBelow();
-  console.log(nodes);
-}
+//   if (!root) return null;
+//   if (root === from) {
+//     nodeBelow();
+//     return 0;
+//   }
+//   nodeBelow();
+//   console.log(nodes);
+// }
 
 const tre = new Tree<number>();
 
 [20, 8, 22, 4, 12, 10, 14].forEach((val) => tre.add(val));
 // nodeAtDistance(tre.root!.left!, tre.root!, 2);
 
-console.log(tre.size);
+// tre.traverse(console.log);
+// console.log('jh');
+tre.levelTraversal(console.log);
