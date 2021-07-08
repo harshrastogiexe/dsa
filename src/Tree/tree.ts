@@ -7,14 +7,12 @@ class TreeNode<T> {
     this.data = data;
   }
 }
+type Direction = 'INORDER' | 'PREORDER' | 'POSTORDER';
 
 class Tree<T> {
   root: TreeNode<T> | null = null;
 
-  traverse(
-    callback: (val: T) => void,
-    direction: 'INORDER' | 'PREORDER' | 'POSTORDER' = 'INORDER'
-  ) {
+  traverse(callback: (val: T) => void, direction: Direction = 'INORDER') {
     const _traverse = (node: TreeNode<T> | null = this.root) => {
       if (!node) return;
       switch (direction) {
@@ -39,6 +37,50 @@ class Tree<T> {
       }
     };
     _traverse(this.root);
+  }
+
+  traverseIteration(direction: Direction = 'INORDER') {
+    if (!this.root) return;
+    const stack: TreeNode<T>[] = [];
+    let current = this.root;
+
+    if (direction === 'INORDER')
+      while (current || stack.length) {
+        while (current) {
+          stack.push(current);
+          current = current.left!;
+        }
+        current = stack.pop()!;
+        console.log(current.data);
+        current = current.right!;
+      }
+
+    if (direction === 'PREORDER') {
+      stack.push(this.root);
+      while (current) {
+        current = stack.pop()!;
+        if (current) {
+          console.log(current.data);
+          current.right && stack.push(current.right);
+          current.left && stack.push(current.left);
+        }
+      }
+    }
+
+    if (direction === 'POSTORDER') {
+      stack.push(current.right!, current);
+      current = current.left!;
+      console.log(stack);
+      while (stack.length) {
+        if (current.right) stack.push(current.right!);
+        stack.push(current);
+        current = current.left!;
+
+        if (!current) {
+          current = stack.pop()!;
+        }
+      }
+    }
   }
 
   get size() {
@@ -153,9 +195,10 @@ function maxNode(root: TreeNode<number>): number | undefined {
 
 const tre = new Tree<number>();
 
-[20, 8, 22, 4, 12, 10, 14].forEach((val) => tre.add(val));
+[20, 10, 30, 9, 11].forEach((val) => tre.add(val));
 // nodeAtDistance(tre.root!.left!, tre.root!, 2);
 
 // tre.traverse(console.log);
-// console.log('jh');
-tre.levelTraversal(console.log);
+tre.traverseIteration('POSTORDER');
+// tre.levelTraversal(console.log);
+// console.log('\n\n\n');
