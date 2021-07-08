@@ -171,34 +171,30 @@ function maxNode(root: TreeNode<number>): number | undefined {
   return Math.max(root.data, leftTreeMax, rightTreeMax);
 }
 
-// TODO
-// function nodeAtDistance(from: TreeNode<number>, root: TreeNode<number>, k: number) {
-//   const nodes: number[] = [];
-//   function nodeBelow(current = from, distance = k) {
-//     if (!current || k < 0) return;
-//     if (distance === 0) {
-//       nodes.push(current.data);
-//       return;
-//     }
-//     current.left && nodeBelow(current.left, distance - 1);
-//     current.right && nodeBelow(current.right, distance - 1);
-//   }
+function reverseLevelOrderTraversal(tree: Tree<number>) {
+  if (!tree.root) return;
+  const stack: TreeNode<number>[] = [];
+  const queue: TreeNode<number>[] = [];
+  let current = tree.root;
+  queue.push(current);
 
-//   if (!root) return null;
-//   if (root === from) {
-//     nodeBelow();
-//     return 0;
-//   }
-//   nodeBelow();
-//   console.log(nodes);
-// }
+  while (queue.length) {
+    current = queue.shift()!;
+    current.right && queue.push(current.right);
+    current.left && queue.push(current.left);
+    stack.push(current);
+  }
+
+  while (stack.length > 0) console.log(stack.pop()!.data);
+}
 
 const tre = new Tree<number>();
 
 [20, 10, 30, 9, 11].forEach((val) => tre.add(val));
+reverseLevelOrderTraversal(tre);
 // nodeAtDistance(tre.root!.left!, tre.root!, 2);
 
 // tre.traverse(console.log);
-tre.traverseIteration('POSTORDER');
+// tre.traverseIteration('POSTORDER');
 // tre.levelTraversal(console.log);
 // console.log('\n\n\n');
